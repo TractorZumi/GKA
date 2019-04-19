@@ -14,7 +14,7 @@ public class App
 {
     public static void main( String[] args ) throws IOException {
         GraphUtilities.useWindows1252();
-        Graph graph1 = GraphUtilities.createGraphFromFile("src/graphUltimo1.graph");
+        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/graphUltimo1.graph");
 
         ArrayList<Edge> path = GraphUtilities.breadthFirstSearch(graph1, "v1", "v6");
 
