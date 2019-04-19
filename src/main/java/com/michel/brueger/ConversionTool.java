@@ -27,6 +27,63 @@ Construct	    Description
 [a-z&&[^bc]]	a through z, except for b and c: [ad-z] (subtraction)
 [a-z&&[^m-p]]	a through z, and not m through p: [a-lq-z] (subtraction)
 
+
+Construct	    Description
+.	            Any character (may or may not match line terminators)
+\d	            A digit: [0-9]
+\D	            A non-digit: [^0-9]
+\s	            A whitespace character: [ \t\n\x0B\f\r]
+\S	            A non-whitespace character: [^\s]
+\w	            A word character: [a-zA-Z_0-9]
+\W	            A non-word character: [^\w]
+private final String REGEX = "\\d"; // a single digit
+
+
+Greedy	Reluctant	Possessive	Meaning
+X?	    X??	        X?+	        X, once or not at all
+X*	    X*?	        X*+	        X, zero or more times
+X+	    X+?	        X++	        X, one or more times
+X{n}	X{n}?	    X{n}+	    X, exactly n times
+X{n,}	X{n,}?	    X{n,}+	    X, at least n times
+X{n,m}	X{n,m}?	    X{n,m}+	    X, at least n but not more than m times
+
+    Enter your regex: a?
+    Enter input string to search: aaaaa
+    I found the text "a" starting at index 0 and ending at index 1.
+    I found the text "a" starting at index 1 and ending at index 2.
+    I found the text "a" starting at index 2 and ending at index 3.
+    I found the text "a" starting at index 3 and ending at index 4.
+    I found the text "a" starting at index 4 and ending at index 5.
+    I found the text "" starting at index 5 and ending at index 5.
+
+    Enter your regex: a*
+    Enter input string to search: aaaaa
+    I found the text "aaaaa" starting at index 0 and ending at index 5.
+    I found the text "" starting at index 5 and ending at index 5.
+
+    Enter your regex: a+
+    Enter input string to search: aaaaa
+    I found the text "aaaaa" starting at index 0 and ending at index 5.
+
+    Enter your regex: .*foo  // greedy quantifier
+    Enter input string to search: xfooxxxxxxfoo
+    I found the text "xfooxxxxxxfoo" starting at index 0 and ending at index 13.
+
+    Enter your regex: .*?foo  // reluctant quantifier
+    Enter input string to search: xfooxxxxxxfoo
+    I found the text "xfoo" starting at index 0 and ending at index 4.
+    I found the text "xxxxxxfoo" starting at index 4 and ending at index 13.
+
+    Enter your regex: .*+foo // possessive quantifier
+    Enter input string to search: xfooxxxxxxfoo
+    No match found.
+
+    public int start(int group): Returns the start index of the subsequence captured by the given group during the previous match operation.
+    public int end (int group): Returns the index of the last character, plus one, of the subsequence captured by the given group during the previous match operation.
+    public String group (int group): Returns the input subsequence captured by the given group during the previous match operation.
+
+    To match any 2 digits, followed by the exact same two digits, you would use (\d\d)\1 as the regular expression:
+
      */
 
     public void readGraphFile(String filename) throws IOException {
