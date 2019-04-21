@@ -98,11 +98,11 @@ public class GraphUtilitiesTest {
         assertEquals("Kante1-7", graphUltimo1.getEdge(2).getAttribute("name"));
         assertEquals("Kante2-3", graphUltimo1.getEdge(3).getAttribute("name"));
         assertEquals("Kante2-6", graphUltimo1.getEdge(4).getAttribute("name"));
-        assertEquals("5", graphUltimo1.getEdge(0).getAttribute("weight"));
-        assertEquals("7", graphUltimo1.getEdge(1).getAttribute("weight"));
-        assertEquals("6", graphUltimo1.getEdge(2).getAttribute("weight"));
-        assertEquals("4", graphUltimo1.getEdge(3).getAttribute("weight"));
-        assertEquals("3", graphUltimo1.getEdge(4).getAttribute("weight"));
+        assertEquals((Integer)5, graphUltimo1.getEdge(0).getAttribute("weight"));
+        assertEquals((Integer)7, graphUltimo1.getEdge(1).getAttribute("weight"));
+        assertEquals((Integer)6, graphUltimo1.getEdge(2).getAttribute("weight"));
+        assertEquals((Integer)4, graphUltimo1.getEdge(3).getAttribute("weight"));
+        assertEquals((Integer)3, graphUltimo1.getEdge(4).getAttribute("weight"));
     }
 
     @Test(expected= FileNotFoundException.class)

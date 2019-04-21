@@ -6,25 +6,25 @@ import org.graphstream.graph.Graph;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Hello world!
- *
- */
+import org.graphstream.algorithm.Kruskal;
+
 public class App 
 {
     public static void main( String[] args ) throws IOException {
+
         GraphUtilities.useWindows1252();
-        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/graphUltimo1.graph");
+        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/graph05.graph");
 
-        // commit this
+        Kruskal kruskal = new Kruskal();
 
-        ArrayList<Edge> path = GraphUtilities.breadthFirstSearch(graph1, "v1", "v6");
+        kruskal.init(graph1);
+        kruskal.compute();
 
+        ArrayList<Edge> tree = MinimumSpanningTrees.minimumSpanningTreeKruskal(graph1);
+
+        GraphUtilities.colorInEdges(tree, graph1, "red");
         GraphUtilities.applyBetterGraphics(graph1);
-
-        GraphUtilities.colorInEdges(path, graph1, "red");
-
-        System.out.print("path: " + path);
         graph1.display();
+        System.out.print((Integer)graph1.getAttribute("minimumSpanningWeight"));
     }
 }
