@@ -16,7 +16,6 @@ import java.util.ArrayDeque;
 import java.util.Random;
 
 
-import org.graalvm.compiler.graph.Edges;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 
