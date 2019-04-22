@@ -35,9 +35,10 @@ public class MinimumSpanningTrees {
         }
 
         // Sort the Edges by weight
-        Arrays.sort(edgeArray, Comparator.comparingInt((Edge edge) -> (Integer)edge.getAttribute("weight")));
+//        Arrays.sort(edgeArray, Comparator.comparingInt((Edge edge) -> (Integer)edge.getAttribute("weight")));
+        Arrays.sort(edgeArray, Comparator.comparingDouble((Edge edge) -> (Double)edge.getAttribute("weight")));
 
-        int totalWeight = 0;
+        Double totalWeight = 0.0;
 
         // Loop adding new edges
         for(i = 0; i < edgeArray.length; i++) {
@@ -47,7 +48,7 @@ public class MinimumSpanningTrees {
             if (disjointSet.union(position1, position2)) {
                 // edge has merged to sets, add it to the spanning tree
                 spanningEdges.add(edgeArray[i]);
-                totalWeight += (Integer)edgeArray[i].getAttribute("weight");
+                totalWeight += (Double)edgeArray[i].getAttribute("weight");
             }
         }
 

@@ -162,7 +162,7 @@ public final class GraphUtilities {
                     result += " (" + edge.getAttribute("name") + ")";
 
                 if (edge.hasAttribute("weight"))
-                    result += " :: " + Integer.toString((Integer)edge.getAttribute("weight"));
+                    result += " :: " + Double.toString((Double)edge.getAttribute("weight"));
 
                 result += ";\n";
 
@@ -235,7 +235,8 @@ public final class GraphUtilities {
 
             // Compile the regex pattern
             Pattern pattern = Pattern.compile
-                    ("(?<node1>[^\\s,]+)((\\s)+:(\\s)+(?<attr1>[0-9]+))?(,(?<node2>[^\\s]+)((\\s)+:(\\s)+(?<attr2>[0-9]+))?((\\s)+\\((?<edge>[^\\s]+)\\))?((\\s)+::(\\s)+(?<weight>[0-9]+))?)?;|\\s*");
+                    //("(?<node1>[^\\s,]+)((\\s)+:(\\s)+(?<attr1>[0-9]+))?(,(?<node2>[^\\s]+)((\\s)+:(\\s)+(?<attr2>[0-9]+))?((\\s)+\\((?<edge>[^\\s]+)\\))?((\\s)+::(\\s)+(?<weight>[0-9]+))?)?;|\\s*");
+                            ("(?<node1>[^\\s,]+)((\\s)+:(\\s)+(?<attr1>[0-9]+))?(,(?<node2>[^\\s]+)((\\s)+:(\\s)+(?<attr2>[0-9]+))?((\\s)+\\((?<edge>[^\\s]+)\\))?((\\s)+::(\\s)+(?<weight>[0-9]+(\\.)?[0-9]*))?)?;|\\s*");
 
             while ((line = bufferedReader.readLine()) != null) {
                 // Create Matcher object for the read line
@@ -292,7 +293,7 @@ public final class GraphUtilities {
                             // Apply weight
                             String edgeWeight = matcher.group("weight");
                             if (edgeWeight != null) {
-                                currentEdge.addAttribute("weight", Integer.parseInt(edgeWeight));
+                                currentEdge.addAttribute("weight", Double.parseDouble(edgeWeight));
                                 if (currentEdge.hasAttribute("ui.label"))
                                     currentEdge.setAttribute("ui.label", currentEdge.getAttribute("ui.label") + ": " + edgeWeight);
                                 else
@@ -327,8 +328,25 @@ public final class GraphUtilities {
         return graph;
     }
 
-    private static void addRandomEdge(Graph graph, boolean allowMultiEdges){
+    // The graph to generate always has nodes with ids "1"-"nr_of_nodes"
+    private static void addRandomEdge(Graph graph, boolean allowMultiEdges, boolean[][] hasEdge){
+        Random rand = new Random();
+        int nodes = graph.getNodeCount();
+        int first_node = rand.nextInt(nodes) + 1;
+        int second_node = rand.nextInt(nodes) + 1;
 
+        if (first_node > second_node){
+            int temp = second_node;
+            second_node = first_node;
+            first_node = temp;
+        }
+
+        if (allowMultiEdges || !hasEdge[first_node - 1][second_node - 1]) {
+            if (graph != null)
+                graph.addEdge(Integer.toString(graph.getEdgeCount()), Integer.toString(first_node), Integer.toString(second_node));
+
+            hasEdge[first_node - 1][second_node - 1] = true;
+        }
     }
 
     public static Graph generateGraph(int numberOfEdges, int numberOfNodes, boolean isConnected, boolean allowMultiEdges){
@@ -346,46 +364,80 @@ public final class GraphUtilities {
         generatedGraph.setStrict(false);
 
         Random rand = new Random();
+        // This will hold an adjacency matrix, where only indices i,j with i <= j are set and used(graph is undirected)
+        boolean hasEdge[][] = new boolean[numberOfNodes][numberOfNodes];
+
         if (isConnected) {
             // If a connected graph cannot be generated, return empty graph
             if (numberOfEdges < numberOfNodes - 1)
                 return generatedGraph;
 
+            // This will hold all generated edges
             ArrayList<Edge> generatedEdges = new ArrayList<>();
-            //boolean hasEdge[][] = new boolean[][];
+
 
             if (numberOfNodes >= 2){
                 // Graph has at least 2 nodes
                generatedEdges.add(generatedGraph.addEdge(Integer.toString(generatedEdges.size()), "1", "2"));
+               hasEdge[0][1] = true;
             }
 
             // Add a new node to the graph by adding an edge to a random existing node
             // A random existing edge is chosen to determine this existing node to connect to
+            System.out.print("new edge count: " + generatedGraph.getEdgeCount() + "\n");
+
             for (int i = 2; i < numberOfNodes; i++){
                 int randomIndex = rand.nextInt(generatedEdges.size());
                 Edge chosenEdge = generatedEdges.get(randomIndex);
+
+                Node chosenNode;
+
                 if (rand.nextBoolean())
-                    generatedGraph.addEdge(Integer.toString(generatedEdges.size()), chosenEdge.getNode0(), Integer.toString(i + 1));
+                    chosenNode = chosenEdge.getNode0();
                 else
-                    generatedGraph.addEdge(Integer.toString(generatedEdges.size()), chosenEdge.getNode1(), Integer.toString(i + 1));
+                    chosenNode = chosenEdge.getNode1();
+
+                hasEdge[Integer.parseInt(chosenNode.getId()) - 1][i] = true;
+
+                generatedEdges.add(generatedGraph.addEdge(Integer.toString(generatedEdges.size()), chosenNode.getId(), Integer.toString(i + 1)));
+
+                System.out.print("Added edge " + chosenNode.getId() + " to " + Integer.toString((i+1)) + "\n");
+                System.out.print("new edge count: " + generatedGraph.getEdgeCount() + "\n");
             }
 
             // Generate the remaining edges randomly, skip multi-edges with a probability of 1/4, if allowMultiEdges is true
-            for (int i = 0; i < numberOfEdges - numberOfNodes; i++){
-                addRandomEdge(generatedGraph, allowMultiEdges);
+            for (int i = 0; i < numberOfEdges - numberOfNodes + 1; i++){
+                addRandomEdge(generatedGraph, allowMultiEdges, hasEdge);
             }
         }
         else{
-            // Generate all nodes 1-numberOfNodes
-
-            // Loop numberOfEdges times and generate two numbers to decide which nodes are connected
-
-            // if allowMultiEdges is true, skip a multi-edge with a probability of 1/4, otherwise always skip
-
-            // Save the info what edges are already in the graph in an arraylist
+            for (int i = 0; i < numberOfEdges; i++){
+                addRandomEdge(generatedGraph, allowMultiEdges, hasEdge);
+            }
         }
 
+        // Generate integer edge weights from 0-1000
+        for (Edge edge : generatedGraph.getEachEdge()){
+            edge.addAttribute("weight", ((Integer)rand.nextInt(1000)).doubleValue());
+        }
+
+        System.out.print(generatedGraph.getEdgeCount());
+        System.out.print(generatedGraph.getNodeCount());
         return generatedGraph;
     }
+
+    public static void labelGraph(Graph graph){
+        for (Edge edge : graph.getEachEdge()){
+            if (edge.hasAttribute("weight"))
+                edge.addAttribute("ui.label", (Double)edge.getAttribute("weight"));
+            else
+                edge.addAttribute("ui.label", "no weight");
+        }
+        for (Node node : graph.getEachNode()){
+            node.addAttribute("ui.label", node.getId());
+        }
+    }
 }
+
+
 
