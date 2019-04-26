@@ -33,11 +33,11 @@ public class DisjointSet {
         int root1 = find(position1);
         int root2 = find(position2);
 
-        DisjointSetElement rootElement1 = disjointSet.get(root1);
-        DisjointSetElement rootElement2 = disjointSet.get(root2);
-
         if (root1 == root2)
             return false;
+
+        DisjointSetElement rootElement1 = disjointSet.get(root1);
+        DisjointSetElement rootElement2 = disjointSet.get(root2);
 
         if (rootElement1.getSize() > rootElement2.getSize()) {
             rootElement2.setParent(root1);

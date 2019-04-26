@@ -2,6 +2,7 @@ package com.michel.brueger;
 
 import java.util.*;
 
+import org.graphstream.algorithm.Kruskal;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -14,12 +15,6 @@ public class MinimumSpanningTrees {
         int nodes = graph.getNodeCount();
         int first_node = rand.nextInt(nodes) + 1;
         int second_node = rand.nextInt(nodes) + 1;
-
-        if (first_node > second_node){
-            int temp = second_node;
-            second_node = first_node;
-            first_node = temp;
-        }
 
         int edgeCount = graph.getEdgeCount();
         graph.addEdge(Integer.toString(graph.getEdgeCount()), Integer.toString(first_node), Integer.toString(second_node));
@@ -160,6 +155,30 @@ public class MinimumSpanningTrees {
     }
 
     public static ArrayList<Edge> minimumSpanningTreePrim(Graph graph, boolean outputRuntime) {
-        return minimumSpanningTreeKruskal(graph, outputRuntime);
+        long start = 0;
+        if (outputRuntime)
+            start = java.lang.System.currentTimeMillis();
+
+        ArrayList<Edge> spanningEdges = new ArrayList<>();
+
+
+
+
+        if (outputRuntime)
+            System.out.print("Kruskal's Algorithm runtime: " + ((java.lang.System.currentTimeMillis() - start) / 1000.0) + " secs" + "\n");
+
+        return spanningEdges;
+        //return minimumSpanningTreeKruskal(graph, outputRuntime);
+    }
+
+    public static Double kruskalGraphstream(Graph graph){
+        Kruskal kruskal = new Kruskal();
+        kruskal.init(graph);
+        long start = java.lang.System.currentTimeMillis();
+        kruskal.compute();
+
+        System.out.print("runtime graphstream kruskal: " + (java.lang.System.currentTimeMillis() - start) / 1000.0 + "\n");
+        System.out.print("graphstream kruskal: " + kruskal.getTreeWeight() + "\n");
+        return kruskal.getTreeWeight();
     }
 }

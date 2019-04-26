@@ -16,14 +16,7 @@ public class App
         GraphUtilities.useWindows1252();
         Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/genGraph.graph");
 
-        Kruskal kruskal = new Kruskal();
-
-        kruskal.init(graph1);
-        long start = java.lang.System.currentTimeMillis();
-        kruskal.compute();
-
-        System.out.print("runtime graphstream kruskal: " + (java.lang.System.currentTimeMillis() - start) / 1000.0 + "\n");
-        System.out.print("graphstream kruskal: " + kruskal.getTreeWeight() + "\n");
+        MinimumSpanningTrees.kruskalGraphstream(graph1 );
 
         ArrayList<Edge> tree = MinimumSpanningTrees.minimumSpanningTreeKruskal(graph1, true);
         System.out.print("own kruskal: ");
@@ -36,8 +29,8 @@ public class App
     }
 
     public static void testGraphGenerator(){
-        int nrEdges = 50;// max: 350000
-        Graph graph = MinimumSpanningTrees.generateGraph(nrEdges + 20, nrEdges, true, true );
+        int nrEdges = 100;// max: 350000
+        Graph graph = MinimumSpanningTrees.generateGraph(nrEdges + 20, nrEdges, false, true );
         GraphUtilities.applyBetterGraphics(graph);
         GraphUtilities.labelGraph(graph);
 
@@ -46,7 +39,6 @@ public class App
         }
         catch(IOException e){}
     }
-
 
 
     public static void main( String[] args ) throws IOException {
