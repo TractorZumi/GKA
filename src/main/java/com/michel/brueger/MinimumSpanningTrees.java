@@ -103,6 +103,7 @@ public class MinimumSpanningTrees {
 
     public static ArrayList<Edge> minimumSpanningTreeKruskal(Graph graph, boolean outputRuntime) {
         long start = 0;
+        //long accessCounter = 0;
         if (outputRuntime)
             start = java.lang.System.currentTimeMillis();
         // Create an Edge Array for fast sorting
@@ -148,8 +149,68 @@ public class MinimumSpanningTrees {
 
         graph.setAttribute("minimumSpanningWeight", totalWeight);
 
-        if (outputRuntime)
+        if (outputRuntime) {
             System.out.print("Kruskal's Algorithm runtime: " + ((java.lang.System.currentTimeMillis() - start) / 1000.0) + " secs" + "\n");
+            //System.out.print("Kruskal's Algorithm accesses: " + accessCounter);
+        }
+
+        return spanningEdges;
+    }
+
+    public static ArrayList<Edge> minimumSpanningTreeKruskalWithCounter(Graph graph, boolean outputRuntime) {
+        long start = 0;
+        long accessCounter = 0;
+        if (outputRuntime)
+            start = java.lang.System.currentTimeMillis();
+        // Create an Edge Array for fast sorting
+        Collection<Edge> edgeSet = graph.getEdgeSet();
+        Edge[] edgeArray = new Edge[edgeSet.size()];
+
+        // Create the result list of spanningEdges
+        ArrayList<Edge> spanningEdges = new ArrayList<>();
+
+        int i = 0;
+        for(Edge edge : edgeSet) {
+            if (!edge.hasAttribute("weight")) {
+                return spanningEdges;
+            }
+            accessCounter += 1;
+            edgeArray[i] = edge;
+            i++;
+        }
+
+        // Create new DisjointSet
+        DisjointSet disjointSet = new DisjointSet();
+
+        // Create a single Set for each Node
+        for (Node node : graph.getEachNode()) {
+            node.setAttribute("position", disjointSet.makeSet());
+            accessCounter += 1;
+        }
+
+        // Sort the Edges by weight
+        Arrays.sort(edgeArray, Comparator.comparingDouble((Edge edge) -> (Double)edge.getAttribute("weight")));
+
+        Double totalWeight = 0.0;
+
+        // Loop adding new edges
+        for(i = 0; i < edgeArray.length; i++) {
+            int position1 = edgeArray[i].getNode0().getAttribute("position");
+            int position2 = edgeArray[i].getNode1().getAttribute("position");
+            accessCounter += 2;
+            if (disjointSet.union(position1, position2)) {
+                // edge has merged to sets, add it to the spanning tree
+                spanningEdges.add(edgeArray[i]);
+                totalWeight += (Double)edgeArray[i].getAttribute("weight");
+            }
+        }
+
+        graph.setAttribute("minimumSpanningWeight", totalWeight);
+
+        if (outputRuntime) {
+            System.out.print("Kruskal's Algorithm runtime: " + ((java.lang.System.currentTimeMillis() - start) / 1000.0) + " secs" + "\n");
+            System.out.print("Kruskal's Algorithm accesses: " + accessCounter);
+        }
 
         return spanningEdges;
     }
@@ -160,8 +221,8 @@ public class MinimumSpanningTrees {
             start = java.lang.System.currentTimeMillis();
 
         ArrayList<Edge> spanningEdges = new ArrayList<>();
-
-
+        Comparator<Edge> edgeComparator = Comparator.comparingDouble((Edge edge) -> (Double)edge.getAttribute("weight"));
+        PriorityQueue<Edge> edgeQueue = new PriorityQueue<>(edgeComparator);
 
 
         if (outputRuntime)

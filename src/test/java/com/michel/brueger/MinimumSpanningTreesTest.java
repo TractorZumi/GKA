@@ -38,7 +38,7 @@ class MinimumSpanningTreesTest {
         MinimumSpanningTrees.minimumSpanningTreeKruskal(graph03, false);
         assertEquals((Object)MinimumSpanningTrees.kruskalGraphstream(graph03), (Object) graph03.getAttribute("minimumSpanningWeight"));
         MinimumSpanningTrees.minimumSpanningTreeKruskal(graph04, false);
-        assertEquals(9, (Object) graph04.getAttribute("minimumSpanningWeight"));
+        assertEquals((Object)MinimumSpanningTrees.kruskalGraphstream(graph04), (Object) graph04.getAttribute("minimumSpanningWeight"));
         assertEquals(15, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph08, false).size());
         assertEquals(11, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph10, false).size());
         assertEquals(21, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph11, false).size());
