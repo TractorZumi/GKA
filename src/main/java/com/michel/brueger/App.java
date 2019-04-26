@@ -12,7 +12,7 @@ public class App
 {
     public static void testKruskall() throws IOException {
         GraphUtilities.useWindows1252();
-        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/genGraph150nodes100edges.graph");
+        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/graphUltimo1.graph");
 
         Kruskal kruskal = new Kruskal();
 
@@ -43,8 +43,8 @@ public class App
     }
 
     public static void main( String[] args ) throws IOException {
-        //testKruskall();
+        testKruskall();
 
-        testGraphGenerator();
+//        testGraphGenerator();
     }
 }

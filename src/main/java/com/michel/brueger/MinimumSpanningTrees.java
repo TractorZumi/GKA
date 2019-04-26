@@ -19,9 +19,9 @@ public class MinimumSpanningTrees {
 
         int i = 0;
         for(Edge edge : edgeSet) {
-            if (!edge.hasAttribute("weight"))
+            if (!edge.hasAttribute("weight")) {
                 return spanningEdges;
-
+            }
             edgeArray[i] = edge;
             i++;
         }
