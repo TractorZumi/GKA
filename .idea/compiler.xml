@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="GKA" />
         <module name="gkaPraktikum1" />
+        <module name="GKA2" />
       </profile>
     </annotationProcessing>
   </component>

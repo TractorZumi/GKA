@@ -33,21 +33,21 @@ public class GraphUtilitiesTest {
 
     @Test
     public void testBreadthFirstSearch() throws InterruptedException {
-        assertEquals(1, GraphUtilities.breadthFirstSearch(graph1, "a", "b").size());
-        assertEquals(2, GraphUtilities.breadthFirstSearch(graph1, "j", "d").size());
-        assertEquals(0, GraphUtilities.breadthFirstSearch(graph1, "a", "a").size());
-        assertNull(GraphUtilities.breadthFirstSearch(graph1, "c", "i"));
-        assertEquals(1, GraphUtilities.breadthFirstSearch(graph2, "a", "b").size());
-        assertEquals(2, GraphUtilities.breadthFirstSearch(graph2, "j", "d").size());
-        assertEquals(0, GraphUtilities.breadthFirstSearch(graph2, "a", "a").size());
-        assertEquals(1, GraphUtilities.breadthFirstSearch(graph3, "Cuxhaven", "Hannover").size());
-        assertEquals(2, GraphUtilities.breadthFirstSearch(graph3, "Hannover", "Cuxhaven").size());
-        assertEquals(0, GraphUtilities.breadthFirstSearch(graph3, "Hamburg", "Hamburg").size());
-        assertNull(GraphUtilities.breadthFirstSearch(graph3, "Hamburg", "Münster"));
-        assertEquals(1, GraphUtilities.breadthFirstSearch(graph6, "1", "5").size());
-        assertEquals(2, GraphUtilities.breadthFirstSearch(graph6, "1", "2").size());
-        assertEquals(0, GraphUtilities.breadthFirstSearch(graph6, "5", "5").size());
-        assertNull(GraphUtilities.breadthFirstSearch(graph6, "5", "11"));
+        assertEquals(1, GraphAlgorithms.breadthFirstSearch(graph1, "a", "b").size());
+        assertEquals(2, GraphAlgorithms.breadthFirstSearch(graph1, "j", "d").size());
+        assertEquals(0, GraphAlgorithms.breadthFirstSearch(graph1, "a", "a").size());
+        assertNull(GraphAlgorithms.breadthFirstSearch(graph1, "c", "i"));
+        assertEquals(1, GraphAlgorithms.breadthFirstSearch(graph2, "a", "b").size());
+        assertEquals(2, GraphAlgorithms.breadthFirstSearch(graph2, "j", "d").size());
+        assertEquals(0, GraphAlgorithms.breadthFirstSearch(graph2, "a", "a").size());
+        assertEquals(1, GraphAlgorithms.breadthFirstSearch(graph3, "Cuxhaven", "Hannover").size());
+        assertEquals(2, GraphAlgorithms.breadthFirstSearch(graph3, "Hannover", "Cuxhaven").size());
+        assertEquals(0, GraphAlgorithms.breadthFirstSearch(graph3, "Hamburg", "Hamburg").size());
+        assertNull(GraphAlgorithms.breadthFirstSearch(graph3, "Hamburg", "Münster"));
+        assertEquals(1, GraphAlgorithms.breadthFirstSearch(graph6, "1", "5").size());
+        assertEquals(2, GraphAlgorithms.breadthFirstSearch(graph6, "1", "2").size());
+        assertEquals(0, GraphAlgorithms.breadthFirstSearch(graph6, "5", "5").size());
+        assertNull(GraphAlgorithms.breadthFirstSearch(graph6, "5", "11"));
     }
 
     @Test

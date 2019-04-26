@@ -18,9 +18,15 @@ public class DisjointSet {
     // Find using path compression
     public int find(int position) {
         DisjointSetElement element = disjointSet.get(position);
-        if(element.getParent() != position)
-            element.setParent(find(element.getParent()));
-        return element.getParent();
+
+        int parent = element.getParent();
+
+        if(parent != position) {
+            element.setParent(find(parent));
+            return element.getParent();
+        }
+        else
+            return parent;
     }
 
     public boolean union(int position1, int position2) {

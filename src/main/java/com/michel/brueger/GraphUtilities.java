@@ -7,12 +7,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.ArrayDeque;
 import java.util.Random;
 
 
@@ -29,84 +28,7 @@ public final class GraphUtilities {
     public static void useWindows1252() {
         fileEncoding = "Cp1252";
     }
-    /**
-     *
-     * @param graph : Graph object from GraphStream library containing fromNode and toNode
-     * @param fromNode : Node object from GraphStream library. Start of shortest path to find.
-     * @param toNode : Node object from GraphStream library. Finish of shortest path to find.
-     * @return : List of Edges (GraphStream) representing one of the shortest paths form fromNode to toNode.
-     */
-    public static ArrayList<Edge> breadthFirstSearch(Graph graph, String fromNode, String toNode) {
-        // If the starting node is equal to the ending node, return an empty list of edges
-        if (fromNode.equals(toNode))
-            return new ArrayList<Edge>();
-        if (graph.getNode(fromNode) == null || graph.getNode(toNode) == null)
-            return null;
 
-        ArrayDeque<Node> openNodes = new ArrayDeque<Node>();
-
-        Node startingNode = graph.getNode(fromNode);
-        openNodes.add(startingNode);
-
-        startingNode.setAttribute("depth", 0);
-        startingNode.setAttribute("parent", (Object)null);
-
-        boolean toNodeFound = false;
-        while(!openNodes.isEmpty() && !toNodeFound) {
-            Node currentNode = openNodes.poll();
-
-            System.out.print("new current node: " + currentNode.getId() + "\n");
-
-            Iterator<Node> neighbours = currentNode.getNeighborNodeIterator();
-            while(neighbours.hasNext() && !toNodeFound) {
-                Node neighbourNode = neighbours.next();
-
-                if (currentNode.hasEdgeToward(neighbourNode))
-                {
-                    if (!neighbourNode.hasAttribute("depth")) {
-                        System.out.print("looking at neighbour: " + neighbourNode.getId() + "\n");
-
-                        neighbourNode.addAttribute("depth", (Integer)currentNode.getAttribute("depth") + 1);
-                        neighbourNode.addAttribute("parent", currentNode);
-                        neighbourNode.addAttribute("ui.label", neighbourNode.getAttribute("ui.label") + " depth: " + ((Integer)currentNode.getAttribute("depth") + 1) + " parent: " + currentNode);
-                        if (neighbourNode.getId().equals(toNode))
-                            toNodeFound = true;
-                        else
-                            openNodes.add(neighbourNode);
-                    }
-                }
-            }
-        }
-
-        // Build path from end node to start node using the parent attribute
-
-        ArrayList<Edge> path = null;
-
-        if (toNodeFound) {
-            path = new ArrayList<Edge>();
-
-            Node nextNode = graph.getNode(toNode);
-            Node parent = ((Node)nextNode.getAttribute("parent"));
-
-            System.out.print("current: " + nextNode + " with parent: " + parent + "\n");
-
-            while (!nextNode.getId().equals(fromNode)){
-                path.add(0, nextNode.getEdgeFrom(parent));
-                nextNode = parent;
-                parent = ((Node)nextNode.getAttribute("parent"));
-                System.out.print("current: " + nextNode + " with parent: " + parent + "\n");
-            }
-        }
-
-        Iterator<Node> iter = graph.getNodeIterator();
-        while(iter.hasNext()){
-            Node n = iter.next();
-            n.removeAttribute("depth");
-            n.removeAttribute("parent");
-        }
-
-        return path;
-    }
 
     public static void colorInEdges(ArrayList<Edge> edges, Graph graph, String color)
     {
@@ -135,7 +57,7 @@ public final class GraphUtilities {
 
     public static boolean createFileFromGraph(String filePath, Graph graph) throws IOException{
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, false), fileEncoding))){
-            String result = "";
+            StringBuilder result = new StringBuilder();
             boolean hasDirected = false;
             boolean hasUndirected = false;
 
@@ -147,24 +69,24 @@ public final class GraphUtilities {
                 nodes.add(node0.getId());
                 nodes.add(node1.getId());
 
-                result += node0.getId();
+                result.append(node0.getId());
                 if (node0.hasAttribute("value")) {
-                    result += " : " + node0.getAttribute("value") + ",";
+                    result.append(" : " + node0.getAttribute("value") + ",");
                 }
-                result += ",";
+                result.append(",");
 
-                result += node1.getId();
+                result.append(node1.getId());
                 if (node1.hasAttribute("value")) {
-                    result += " : " + node1.getAttribute("value");
+                    result.append(" : " + node1.getAttribute("value"));
                 }
 
                 if(edge.hasAttribute("name"))
-                    result += " (" + edge.getAttribute("name") + ")";
+                    result.append(" (" + edge.getAttribute("name") + ")");
 
                 if (edge.hasAttribute("weight"))
-                    result += " :: " + Double.toString((Double)edge.getAttribute("weight"));
+                    result.append(" :: " + Double.toString((Double)edge.getAttribute("weight")));
 
-                result += ";\n";
+                result.append(";\n");
 
                 if(edge.isDirected())
                     hasDirected = true;
@@ -174,19 +96,21 @@ public final class GraphUtilities {
 
             for (Node node : graph.getEachNode()) {
                 if(!nodes.contains(node.getId())) {
-                    result += node.getId() + ";\n";
+                    result.append(node.getId() + ";\n");
                 }
             }
 
+            String trueResult = result.toString();
             if (hasDirected) {
                 if (hasUndirected)
                     // the current format does not support mixed graphs
                     return false;
                 else
-                    result = "#directed;\n" + result;
+                    trueResult = "#directed;\n" + result;
             }
 
-            writer.write(result.substring(0, result.length() - 1));
+            if (trueResult.length() > 0)
+                writer.write(trueResult.substring(0, trueResult.length() - 1));
         }
 
         return true;
@@ -223,16 +147,16 @@ public final class GraphUtilities {
 
             line = bufferedReader.readLine();
 
-            line = line.replaceAll("\\s","");
+            if (line != null) {
+                line = line.replaceAll("\\s", "");
 
-            if (line.equals("#directed;")) {
-                directed = true;
-                System.out.print("Directed graph detected.\n");
+                if (line.equals("#directed;")) {
+                    directed = true;
+                    //System.out.print("Directed graph detected.\n");
+                } else
+                    // reset bufferedReader to the first line
+                    bufferedReader.reset();
             }
-            else
-                // reset bufferedReader to the first line
-                bufferedReader.reset();
-
             // Compile the regex pattern
             Pattern pattern = Pattern.compile
                     //("(?<node1>[^\\s,]+)((\\s)+:(\\s)+(?<attr1>[0-9]+))?(,(?<node2>[^\\s]+)((\\s)+:(\\s)+(?<attr2>[0-9]+))?((\\s)+\\((?<edge>[^\\s]+)\\))?((\\s)+::(\\s)+(?<weight>[0-9]+))?)?;|\\s*");
@@ -243,22 +167,21 @@ public final class GraphUtilities {
                 Matcher matcher = pattern.matcher(line);
 
                 // Debugging
-                System.out.print(line);
 
-                if (matcher.matches())
-                    System.out.print(" matches: ");
-                else
-                    System.out.print(" doesn't match: ");
-                // End Debugging
+              matcher.matches();
+              // End Debugging
 
                 try {
                     // Debugging
+                    /*
                     System.out.print(matcher.group("node1") + " ");
                     System.out.print(matcher.group("node2") + " ");
                     System.out.print(matcher.group("attr1") + " ");;
                     System.out.print(matcher.group("attr2") + " ");
                     System.out.print(matcher.group("edge")  + " ");
                     System.out.print(matcher.group("weight")  + "\n");
+                    */
+
                     // End Debugging
 
                     String node1 = matcher.group("node1");
@@ -328,102 +251,90 @@ public final class GraphUtilities {
         return graph;
     }
 
-    // The graph to generate always has nodes with ids "1"-"nr_of_nodes"
-    private static void addRandomEdge(Graph graph, boolean allowMultiEdges, boolean[][] hasEdge){
-        Random rand = new Random();
-        int nodes = graph.getNodeCount();
-        int first_node = rand.nextInt(nodes) + 1;
-        int second_node = rand.nextInt(nodes) + 1;
+    public static boolean isEqual(Graph graph1, Graph graph2){
+        if (graph1.getNodeCount() != graph2.getNodeCount())
+            return false;
 
-        if (first_node > second_node){
-            int temp = second_node;
-            second_node = first_node;
-            first_node = temp;
-        }
+        if (graph1.getEdgeCount() != graph2.getEdgeCount())
+            return false;
 
-        if (allowMultiEdges || !hasEdge[first_node - 1][second_node - 1]) {
-            if (graph != null)
-                graph.addEdge(Integer.toString(graph.getEdgeCount()), Integer.toString(first_node), Integer.toString(second_node));
+        HashSet<Edge> mappedEdges1 = new HashSet<>();
 
-            hasEdge[first_node - 1][second_node - 1] = true;
-        }
-    }
+        // For each edge in graph2, find a identical edge in graph1 and mark it as mapped
+        for (Edge edge2 : graph2.getEachEdge()) {
+            boolean mapped = false;
+            //System.out.print("Looking at " + edge2.getNode0().getId() + "->" + edge2.getNode1().getId() + "\n");
+            for (Edge edge1 : graph1.getEachEdge()){
 
-    public static Graph generateGraph(int numberOfEdges, int numberOfNodes, boolean isConnected, boolean allowMultiEdges){
-        Graph generatedGraph = new MultiGraph("Generated Graph " + System.currentTimeMillis());
+                // was not already mapped
+                if (mappedEdges1.contains(edge1) || mapped)
+                    continue;
+               // System.out.print("Trying to match with " + edge1.getNode0().getId() + "->" + edge1.getNode1().getId() + "\n");
 
-        // Return empty graph for negative number of edges or zero/negative nodes
-        if (numberOfEdges < 0 || numberOfNodes <= 0)
-            return generatedGraph;
+                // is also directed/undirected and has same node0 and node1(can be swapped if undirected)
+                if (edge1.isDirected() && edge2.isDirected()) {
+                    if (!(edge1.getNode0().getId().equals(edge2.getNode0().getId()) && edge1.getNode1().getId().equals(edge2.getNode1().getId()))) {
+                        continue;
+                    }
+                } else if (!edge1.isDirected() && !edge2.isDirected()){
+                    if (!((edge1.getNode0().getId().equals(edge2.getNode0().getId()) && edge1.getNode1().getId().equals(edge2.getNode1().getId())) ||
+                        (edge1.getNode1().getId().equals(edge2.getNode0().getId()) && edge1.getNode0().getId().equals(edge2.getNode1().getId()))))
+                        continue;
+                }
+                else {
+                    continue;
+                }
 
-        // Specified graph can't be generated without multi edges, return empty graph instead
-        if (numberOfEdges >= numberOfNodes && allowMultiEdges != true)
-            return generatedGraph;
+                // same name
+                if (edge2.hasAttribute("name") && edge1.hasAttribute("name")) {
+                    if (!edge2.getAttribute("name").equals(edge1.getAttribute("name")))
+                        continue;
+                }
+                else if (edge2.hasAttribute("name") || edge1.hasAttribute("name"))
+                    continue;
 
-        generatedGraph.setAutoCreate(true);
-        generatedGraph.setStrict(false);
+                // has same weight
+                if (edge2.hasAttribute("weight") && edge1.hasAttribute("weight")) {
+                    if (!edge2.getAttribute("weight").equals(edge1.getAttribute("weight")))
+                        continue;
+                }
+                else if (edge2.hasAttribute("weight") || edge1.hasAttribute("weight"))
+                        continue;
 
-        Random rand = new Random();
-        // This will hold an adjacency matrix, where only indices i,j with i <= j are set and used(graph is undirected)
-        boolean hasEdge[][] = new boolean[numberOfNodes][numberOfNodes];
-
-        if (isConnected) {
-            // If a connected graph cannot be generated, return empty graph
-            if (numberOfEdges < numberOfNodes - 1)
-                return generatedGraph;
-
-            // This will hold all generated edges
-            ArrayList<Edge> generatedEdges = new ArrayList<>();
-
-
-            if (numberOfNodes >= 2){
-                // Graph has at least 2 nodes
-               generatedEdges.add(generatedGraph.addEdge(Integer.toString(generatedEdges.size()), "1", "2"));
-               hasEdge[0][1] = true;
-            }
-
-            // Add a new node to the graph by adding an edge to a random existing node
-            // A random existing edge is chosen to determine this existing node to connect to
-            System.out.print("new edge count: " + generatedGraph.getEdgeCount() + "\n");
-
-            for (int i = 2; i < numberOfNodes; i++){
-                int randomIndex = rand.nextInt(generatedEdges.size());
-                Edge chosenEdge = generatedEdges.get(randomIndex);
-
-                Node chosenNode;
-
-                if (rand.nextBoolean())
-                    chosenNode = chosenEdge.getNode0();
-                else
-                    chosenNode = chosenEdge.getNode1();
-
-                hasEdge[Integer.parseInt(chosenNode.getId()) - 1][i] = true;
-
-                generatedEdges.add(generatedGraph.addEdge(Integer.toString(generatedEdges.size()), chosenNode.getId(), Integer.toString(i + 1)));
-
-                System.out.print("Added edge " + chosenNode.getId() + " to " + Integer.toString((i+1)) + "\n");
-                System.out.print("new edge count: " + generatedGraph.getEdgeCount() + "\n");
-            }
-
-            // Generate the remaining edges randomly, skip multi-edges with a probability of 1/4, if allowMultiEdges is true
-            for (int i = 0; i < numberOfEdges - numberOfNodes + 1; i++){
-                addRandomEdge(generatedGraph, allowMultiEdges, hasEdge);
-            }
-        }
-        else{
-            for (int i = 0; i < numberOfEdges; i++){
-                addRandomEdge(generatedGraph, allowMultiEdges, hasEdge);
+                mappedEdges1.add(edge1);
+                mapped = true;
+               // System.out.print("matched\n");
             }
         }
 
-        // Generate integer edge weights from 0-1000
-        for (Edge edge : generatedGraph.getEachEdge()){
-            edge.addAttribute("weight", ((Integer)rand.nextInt(1000)).doubleValue());
+        if (mappedEdges1.size() != graph1.getEdgeCount())
+            return false;
+
+        // For each node, find one with the same unique id
+        for (Node node : graph1.getEachNode()){
+            Node node2 = graph2.getNode(node.getId());
+
+            if (node2 == null)
+                return false;
+
+            if (node.hasAttribute("name")){
+                if (!node2.hasAttribute("name"))
+                    return false;
+
+                if (node2.getAttribute("name") != node.getAttribute("name"))
+                    return false;
+            }
+
+            if (node.hasAttribute("value")){
+                if (!node2.hasAttribute("value"))
+                    return false;
+
+                if (node2.getAttribute("value") != node.getAttribute("value"))
+                    return false;
+            }
         }
 
-        System.out.print(generatedGraph.getEdgeCount());
-        System.out.print(generatedGraph.getNodeCount());
-        return generatedGraph;
+        return true;
     }
 
     public static void labelGraph(Graph graph){
