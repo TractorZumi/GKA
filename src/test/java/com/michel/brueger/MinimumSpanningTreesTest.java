@@ -35,12 +35,12 @@ class MinimumSpanningTreesTest {
 
     @Test
     void minimumSpanningTreeKruskal() {
-        assertEquals(21, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph03).size());
-        assertEquals(9, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph04).size());
-        assertEquals(15, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph08).size());
-        assertEquals(11, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph10).size());
-        assertEquals(21, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph11).size());
-        assertEquals(4, MinimumSpanningTrees.minimumSpanningTreeKruskal(graphUltimo1).size());
+        assertEquals(21, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph03, false).size());
+        assertEquals(9, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph04, false).size());
+        assertEquals(15, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph08, false).size());
+        assertEquals(11, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph10, false).size());
+        assertEquals(21, MinimumSpanningTrees.minimumSpanningTreeKruskal(graph11, false).size());
+        assertEquals(4, MinimumSpanningTrees.minimumSpanningTreeKruskal(graphUltimo1, false).size());
     }
 
     @Test

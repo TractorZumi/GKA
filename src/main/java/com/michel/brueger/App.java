@@ -47,19 +47,7 @@ public class App
         catch(IOException e){}
     }
 
-    public static void testCreateFile() throws IOException{
-        for (int i = 1; i <= 11; i++) {
-            String add = "0";
-            if (i >= 10)
-                add = "";
-            Graph graph = GraphUtilities.createGraphFromFile("src/main/files/graph" + add + i + ".graph");
 
-            GraphUtilities.createFileFromGraph("src/main/files/newgraph" + add + i + ".graph", graph);
-            Graph graphNew = GraphUtilities.createGraphFromFile("src/main/files/newgraph" + add + i + ".graph");
-
-            System.out.print("\n" + i + ". graph: " + GraphUtilities.isEqual(graph, graphNew) + "\n");
-        }
-    }
 
     public static void main( String[] args ) throws IOException {
         //testCreateFile();

@@ -51,6 +51,21 @@ public class GraphUtilitiesTest {
     }
 
     @Test
+    public void testCreateFileFromGraph() throws IOException{
+        for (int i = 1; i <= 11; i++) {
+            String add = "0";
+            if (i >= 10)
+                add = "";
+            Graph graph = GraphUtilities.createGraphFromFile("src/main/files/graph" + add + i + ".graph");
+
+            GraphUtilities.createFileFromGraph("src/main/files/newgraph" + add + i + ".graph", graph);
+            Graph graphNew = GraphUtilities.createGraphFromFile("src/main/files/newgraph" + add + i + ".graph");
+
+            assertTrue(GraphUtilities.isEqual(graph, graphNew));
+        }
+    }
+
+    @Test
     public void testCreateGraphFromFile() throws IOException{
         assertEquals(12, graph1.getNodeCount());
         assertEquals(39, graph1.getEdgeCount());
