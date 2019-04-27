@@ -102,11 +102,21 @@ public class MinimumSpanningTrees {
         return generatedGraph;
     }
 
+    public static long minimumSpanningTreeKruskalTime(Graph graph, boolean outputRuntime){
+        long startTime = System.currentTimeMillis();
+        for(int i=0; i<10; i++){
+            minimumSpanningTreeKruskal(graph, outputRuntime);
+        }
+        long endTime = System.currentTimeMillis();
+        return  (endTime-startTime)/10;
+    }
+
     public static ArrayList<Edge> minimumSpanningTreeKruskal(Graph graph, boolean outputRuntime) {
         long start = 0;
         //long accessCounter = 0;
-        if (outputRuntime)
-            start = java.lang.System.currentTimeMillis();
+        if (outputRuntime){
+           start = java.lang.System.currentTimeMillis();
+        }
         // Create an Edge Array for fast sorting
         Collection<Edge> edgeSet = graph.getEdgeSet();
         Edge[] edgeArray = new Edge[edgeSet.size()];
@@ -158,7 +168,7 @@ public class MinimumSpanningTrees {
         return spanningEdges;
     }
 
-    public static ArrayList<Edge> minimumSpanningTreeKruskalWithCounter(Graph graph, boolean outputRuntime) {
+    public static long minimumSpanningTreeKruskalWithCounter(Graph graph, boolean outputRuntime) {
         long start = 0;
         long accessCounter = 0;
         if (outputRuntime)
@@ -173,7 +183,8 @@ public class MinimumSpanningTrees {
         int i = 0;
         for(Edge edge : edgeSet) {
             if (!edge.hasAttribute("weight")) {
-                return spanningEdges;
+//                return spanningEdges;
+                return accessCounter;
             }
             accessCounter += 1;
             edgeArray[i] = edge;
@@ -210,10 +221,20 @@ public class MinimumSpanningTrees {
 
         if (outputRuntime) {
             System.out.print("Kruskal's Algorithm runtime: " + ((java.lang.System.currentTimeMillis() - start) / 1000.0) + " secs" + "\n");
-            System.out.print("Kruskal's Algorithm accesses: " + accessCounter);
+            System.out.print("Kruskal's Algorithm accesses: " + accessCounter + "\n");
         }
 
-        return spanningEdges;
+//        return spanningEdges;
+        return accessCounter;
+    }
+
+    public static long minimumSpanningTreePrimTime(Graph graph, boolean outputRuntime){
+        long startTime = System.currentTimeMillis();
+        for(int i=0; i<10; i++){
+            minimumSpanningTreePrim(graph, outputRuntime);
+        }
+        long endTime = System.currentTimeMillis();
+        return (startTime - endTime) / 10;
     }
 
     public static ArrayList<Edge> minimumSpanningTreePrim(Graph graph, boolean outputRuntime) {
@@ -317,5 +338,9 @@ public class MinimumSpanningTrees {
         System.out.print("runtime graphstream prim: " + (java.lang.System.currentTimeMillis() - start) / 1000.0 + "\n");
         System.out.print("graphstream prim weight: " + prim.getTreeWeight() + "\n");
         return prim.getTreeWeight();
+    }
+
+    public static long minimumSpanningTreePrimWithCounter(Graph graph1, Boolean outputRuntimeBool) {
+        return 0;
     }
 }
