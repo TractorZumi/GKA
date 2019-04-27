@@ -15,7 +15,7 @@ public class App
 {
     public static void testKruskal() throws IOException {
         GraphUtilities.useWindows1252();
-        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/genGraph.graph");
+        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/graph.graph");
 
         MinimumSpanningTrees.kruskalGraphstream(graph1 );
 
@@ -26,7 +26,6 @@ public class App
         System.out.print(tree.size() == graph1.getNodeCount() - 1);
 
         GraphUtilities.applyBetterGraphics(graph1);
-
     }
 
     public static void testPrim() throws IOException {
@@ -63,9 +62,12 @@ public class App
 
 
     public static void main( String[] args ) throws IOException {
-            testGraphGenerator();
-            //testKruskal();
-            testPrim();
+            //testGraphGenerator();
+            testKruskal();
+            //testPrim();
+
+            Client client = new Client();
+            client.run();
 
     }
 }
