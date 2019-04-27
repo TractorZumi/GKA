@@ -45,12 +45,13 @@ public class App
 
         GraphUtilities.applyBetterGraphics(graph1);
 
-       graph1.display();
+        //graph1.display();
     }
 
     public static void testGraphGenerator(){
-        int nrEdges = 100;// max: 350000
-        Graph graph = MinimumSpanningTrees.generateGraph(nrEdges + 20, nrEdges, true, true );
+        int nrEdges = 3500000;// max: 350000
+        Graph graph = MinimumSpanningTrees.generateGraph(nrEdges + 100000, nrEdges, true, true );
+      //  System.out.print(graph.getNodeCount() + "\n" + graph.getEdgeCount());
         GraphUtilities.applyBetterGraphics(graph);
         GraphUtilities.labelGraph(graph);
 
@@ -62,9 +63,9 @@ public class App
 
 
     public static void main( String[] args ) throws IOException {
-        testGraphGenerator();
-        //testKruskal();
-        testPrim();
+            testGraphGenerator();
+            //testKruskal();
+            testPrim();
 
     }
 }

@@ -29,6 +29,7 @@ public class DisjointSet {
             return parent;
     }
 
+    // Union by size
     public boolean union(int position1, int position2) {
         int root1 = find(position1);
         int root2 = find(position2);

@@ -273,8 +273,8 @@ public class MinimumSpanningTrees {
             }
             // Mark node as added and add it's connecting edge to the spanning tree
             currentNode.setAttribute("isInSpanningTree", true);
-            Edge newEdge = currentNode.getAttribute("connectingEdge");
 
+            Edge newEdge = currentNode.getAttribute("connectingEdge");
             spanningEdges.add(newEdge);
 
           //  System.out.print(currentNode + " ");
