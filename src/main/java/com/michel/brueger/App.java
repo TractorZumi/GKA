@@ -62,10 +62,9 @@ public class App
 
 
     public static void main( String[] args ) throws IOException {
-            //testGraphGenerator();
-            testKruskal();
-            //testPrim();
-
+//            testGraphGenerator();
+//            testKruskal();
+//            testPrim();
             Client client = new Client();
             client.run();
 

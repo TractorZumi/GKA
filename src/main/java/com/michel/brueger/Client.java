@@ -109,7 +109,7 @@ public class Client {
 
     private List<String> mstDialog() {
         List<String> resultList = new ArrayList<>();
-        System.out.println("Auf welche .graph-Datei soll Kruskal angewendet werden? (nur Name, ohne .graph");
+        System.out.println("Von welcher .graph-Datei soll der MST berechnet werden? (nur Name, ohne .graph");
         String filename = scanner1.next();
         String path = "src/main/files/" + filename + ".graph";
         resultList.add(path);
