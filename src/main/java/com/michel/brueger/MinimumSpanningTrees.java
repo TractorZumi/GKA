@@ -302,9 +302,6 @@ public class MinimumSpanningTrees {
             accessCounter++;
             spanningEdges.add(newEdge);
 
-            //  System.out.print(currentNode + " ");
-            // System.out.print(newEdge + Double.toString(newEdge.getAttribute("weight")) + "\n");
-
             spanningWeight += (Double)newEdge.getAttribute("weight");
             accessCounter++;
         }

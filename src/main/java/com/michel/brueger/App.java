@@ -49,7 +49,7 @@ public class App
 
     public static void testPrimDecreaseKey() throws IOException {
         GraphUtilities.useWindows1252();
-        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/genGraph.graph");
+        Graph graph1 = GraphUtilities.createGraphFromFile("src/main/files/graph04.graph");
 
         MinimumSpanningTrees.primGraphstream(graph1);
 
@@ -81,10 +81,10 @@ public class App
 
 
     public static void main( String[] args ) throws IOException {
-            testGraphGenerator();
+            //testGraphGenerator();
             //testKruskal();
             testPrimDecreaseKey();
-            testPrim();
+            //testPrim();
 
 //            Client client = new Client();
 //            client.run();
