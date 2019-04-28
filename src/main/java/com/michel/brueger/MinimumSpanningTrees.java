@@ -475,6 +475,15 @@ public class MinimumSpanningTrees {
         return accessCounter;
     }
 
+    public static long minimumSpanningTreePrimDecreaseKeyTime(Graph graph, boolean outputRuntime){
+        long startTime = System.currentTimeMillis();
+        for(int i=0; i<10; i++){
+            minimumSpanningTreePrimDecreaseKey(graph, outputRuntime);
+        }
+        long endTime = System.currentTimeMillis();
+        return  (endTime-startTime)/10;
+    }
+
     public static ArrayList<Edge> minimumSpanningTreePrimDecreaseKey(Graph graph, boolean outputRuntime){
         long start = 0;
         if (outputRuntime)

@@ -83,7 +83,7 @@ public class Client {
                     if (parametersList.get(1).equals("ja")) outputRuntimeBool = true;
                     try {
                         Graph graph1 = GraphUtilities.createGraphFromFile(parametersList.get(0));
-                        System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimTime(graph1, outputRuntimeBool));
+                        System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimDecreaseKeyTime(graph1, outputRuntimeBool));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -94,7 +94,7 @@ public class Client {
                     if (parametersList.get(1).equals("ja")) outputRuntimeBool = true;
                     try {
                         Graph graph1 = GraphUtilities.createGraphFromFile(parametersList.get(0));
-                        System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimWithCounter(graph1, outputRuntimeBool));
+                        System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimDecreaseKeyWithCounter(graph1));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }                    break;

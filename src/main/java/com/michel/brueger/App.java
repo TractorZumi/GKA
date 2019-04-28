@@ -81,13 +81,13 @@ public class App
 
 
     public static void main( String[] args ) throws IOException {
-            testGraphGenerator();
-            //testKruskal();
-            testPrimDecreaseKey();
-            testPrim();
+//            testGraphGenerator();
+//            testKruskal();
+//            testPrimDecreaseKey();
+//            testPrim();
 
-//            Client client = new Client();
-//            client.run();
+            Client client = new Client();
+            client.run();
 
     }
 }
