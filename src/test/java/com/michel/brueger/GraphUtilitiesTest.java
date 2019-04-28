@@ -63,6 +63,10 @@ public class GraphUtilitiesTest {
 
             assertTrue(GraphUtilities.isEqual(graph, graphNew));
         }
+
+        GraphUtilities.createFileFromGraph("src/main/files/newGraphUltimo1.graph", graphUltimo1);
+        Graph newGraphUltimo1 = GraphUtilities.createGraphFromFile("src/main/files/newGraphUltimo1.graph");
+        assertTrue(GraphUtilities.isProbablyEqual(graphUltimo1, newGraphUltimo1));   //prüft nur auf Anzahl Edges und Nodes
     }
 
     @Test

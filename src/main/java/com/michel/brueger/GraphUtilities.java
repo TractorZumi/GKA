@@ -71,7 +71,8 @@ public final class GraphUtilities {
 
                 result.append(node0.getId());
                 if (node0.hasAttribute("value")) {
-                    result.append(" : " + node0.getAttribute("value") + ",");
+//                    result.append(" : " + node0.getAttribute("value") + ",");      // Ein "," zu viel
+                    result.append(" : " + node0.getAttribute("value"));
                 }
                 result.append(",");
 
@@ -96,7 +97,12 @@ public final class GraphUtilities {
 
             for (Node node : graph.getEachNode()) {
                 if(!nodes.contains(node.getId())) {
-                    result.append(node.getId() + ";\n");
+//                    result.append(node.getId() + ";\n");   //Fehler wenn einzelner Node noch Attribut hat
+                    result.append(node.getId());
+                    if(node.hasAttribute("value")){
+                        result.append(" : " + node.getAttribute("value"));
+                    }
+                    result.append(";\n");
                 }
             }
 
@@ -251,6 +257,36 @@ public final class GraphUtilities {
         return graph;
     }
 
+    public static boolean isProbablyEqual(Graph graph1, Graph graph2){
+        if(graph1.getNodeCount() != graph2.getNodeCount()){
+            return false;
+        }
+        if(graph1.getEdgeCount() != graph2.getEdgeCount()){
+            return false;
+        }
+//        for(Edge edge1 : graph1.getEdgeSet()){
+//            if(!graph2.getEdgeSet().contains(edge1)){
+//                return false;
+//            }
+//        }
+//        for(Edge edge2 : graph2.getEdgeSet()){
+//            if(!graph1.getEdgeSet().contains(edge2)){
+//                return false;
+//            }
+//        }
+//        for(Node node1 : graph1.getEachNode()){
+//            if(!graph2.getNodeSet().contains(node1)){
+//                return false;
+//            }
+//        }
+//        for(Node node2 : graph2.getEachNode()){
+//            if(!graph1.getNodeSet().contains(node2)){
+//                return false;
+//            }
+//        }
+        return true;
+    }
+
     public static boolean isEqual(Graph graph1, Graph graph2){
         if (graph1.getNodeCount() != graph2.getNodeCount())
             return false;
@@ -282,7 +318,7 @@ public final class GraphUtilities {
                         continue;
                 }
                 else {
-                    continue;
+                    continue;     // hier müsste doch was gemacht werden, weil die edges gleich sind
                 }
 
                 // same name

@@ -143,6 +143,8 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    // für tests anzahl kanten = anzahl knoten-1
 }
+
+
+//    für tests anzahl kanten = anzahl knoten-1 wenn zusammenhängend
+//    Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
