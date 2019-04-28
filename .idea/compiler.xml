@@ -9,6 +9,7 @@
         <module name="GKA" />
         <module name="gkaPraktikum1" />
         <module name="GKA2" />
+        <module name="GKA3" />
       </profile>
     </annotationProcessing>
   </component>

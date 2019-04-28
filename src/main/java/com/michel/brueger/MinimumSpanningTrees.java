@@ -267,6 +267,9 @@ public class MinimumSpanningTrees {
             // Loop all edges, because we allow multi-edges
             Iterator<Edge> connectedEdgesIterator = currentNode.getEdgeIterator();
 
+            // Mark node as added
+            currentNode.setAttribute("isInSpanningTree", true);
+
             while (connectedEdgesIterator.hasNext()){
                 Edge edge = connectedEdgesIterator.next();
 
@@ -292,9 +295,7 @@ public class MinimumSpanningTrees {
                     }
                 }
             }
-            // Mark node as added and add it's connecting edge to the spanning tree
-            currentNode.setAttribute("isInSpanningTree", true);
-
+            // Add node's connecting edge to the spanning tree
             Edge newEdge = currentNode.getAttribute("connectingEdge");
             spanningEdges.add(newEdge);
 
