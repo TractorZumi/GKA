@@ -59,6 +59,15 @@ public class NodePriorityQueue {
         upHeap(index);
     }
 
+    public void printHeap(String message){
+        System.out.print(message + "\n");
+        int j = 0;
+        for (int i = 0; i < nodeKeyPairHeap.size(); i++){
+            System.out.print(nodeKeyPairHeap.get(i).getNode().getId() + ": " + nodeKeyPairHeap.get(i).getKey() + " ");
+        }
+        System.out.print("\n");
+    }
+
     // Rebuild heap property from root element with both subtrees being min heaps
     private void heapify(int i)
     {
