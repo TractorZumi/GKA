@@ -6,12 +6,6 @@ public class NodeKeyPair {
     public NodeKeyPair(Node node, double key){
         this.node = node;
         this.key = key;
-        this.index = -1;
-    }
-    public NodeKeyPair(Node node, double key, int index){
-        this.node = node;
-        this.key = key;
-        this.index = index;
     }
 
     public Node getNode() {
@@ -32,14 +26,4 @@ public class NodeKeyPair {
 
     private Node node;
     private double key;
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    private int index;
 }

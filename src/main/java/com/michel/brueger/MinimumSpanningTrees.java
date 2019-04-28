@@ -237,6 +237,7 @@ public class MinimumSpanningTrees {
         return (startTime - endTime) / 10;
     }
 
+
     public static ArrayList<Edge> minimumSpanningTreePrim(Graph graph, boolean outputRuntime) {
         long start = 0;
         if (outputRuntime)
@@ -318,6 +319,74 @@ public class MinimumSpanningTrees {
 
         return spanningEdges;
     }
+
+    public static ArrayList<Edge> minimumSpanningTreePrimDecreaseKey(Graph graph, boolean outputRuntime){
+        long start = 0;
+        if (outputRuntime)
+            start = java.lang.System.currentTimeMillis();
+
+        // Initialize empty list of spanning edges and empty priority queue
+        ArrayList<Edge> spanningEdges = new ArrayList<>();
+        Double spanningWeight = 0.0;
+
+        NodePriorityQueue priorityQueue = new NodePriorityQueue();
+
+        // Insert each node into the priority queue
+        for (Node node : graph.getEachNode()){
+            priorityQueue.insert(node, Double.MAX_VALUE);
+        }
+
+        while(!priorityQueue.isEmpty()){
+            // Deque element with minimum key
+            Node currentNode = priorityQueue.removeMinimum();
+
+            // Loop all connected edges, because we allow multi-edges
+            Iterator<Edge> connectedEdgesIterator = currentNode.getEdgeIterator();
+
+            // Mark node as added
+            currentNode.setAttribute("isInSpanningTree", true);
+
+            while (connectedEdgesIterator.hasNext()){
+                Edge edge = connectedEdgesIterator.next();
+
+                Node currentNeighbour = null;
+                if (edge.getNode1().getId() == currentNode.getId())
+                    currentNeighbour = edge.getNode0();
+                else
+                    currentNeighbour = edge.getNode1();
+
+                // Check, if neighbour is already in spanning tree
+                if (currentNeighbour.getAttribute("isInSpanningTree") == null) {
+                    Double weight = edge.getAttribute("weight");
+
+                    Edge oldEdge = currentNeighbour.getAttribute("connectingEdge");
+
+                    if (oldEdge == null || (Double)oldEdge.getAttribute("weight") > weight) {
+                        priorityQueue.decreaseKey(currentNeighbour, weight);
+                        currentNeighbour.setAttribute("connectingEdge", edge);
+                    }
+                }
+            }
+
+            // Add node's connecting edge to the spanning tree
+            Edge newEdge = currentNode.getAttribute("connectingEdge");
+
+            if (newEdge != null) {
+                spanningEdges.add(newEdge);
+                spanningWeight += (Double) newEdge.getAttribute("weight");
+            }
+        }
+
+        // Add attribute to access mininum spanning weight
+        graph.setAttribute("minimumSpanningWeight", spanningWeight);
+
+        if (outputRuntime)
+            System.out.print("Prim Algorithm(with decrease key) runtime: " + ((java.lang.System.currentTimeMillis() - start) / 1000.0) + " secs" + "\n");
+
+        return spanningEdges;
+    }
+
+
 
     public static Double kruskalGraphstream(Graph graph){
         Kruskal kruskal = new Kruskal();
