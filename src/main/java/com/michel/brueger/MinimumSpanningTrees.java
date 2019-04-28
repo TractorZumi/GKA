@@ -237,6 +237,89 @@ public class MinimumSpanningTrees {
         return (startTime - endTime) / 10;
     }
 
+    public static int minimumSpanningTreePrimCounter(Graph graph) {
+        int accessCounter = 0;
+
+        // Initialize empty list of spanning edges and empty priority queue
+        ArrayList<Edge> spanningEdges = new ArrayList<>();
+        Double spanningWeight = 0.0;
+        Comparator<NodeKeyPair> edgeComparator = Comparator.comparingDouble((NodeKeyPair) -> (Double)NodeKeyPair.getKey());
+        PriorityQueue<NodeKeyPair> priorityQueue = new PriorityQueue<>(edgeComparator);
+
+        // Initialize the priority queue with a random node
+        Node initialNode = graph.getNodeIterator().next();
+        accessCounter++;
+        priorityQueue.add(new NodeKeyPair(initialNode, 0));
+
+        // Create dummy edge with weight 0 for the initial node's connectedEdge
+        initialNode.setAttribute("connectingEdge", graph.addEdge("dummyEdge", initialNode, initialNode));
+        graph.getEdge("dummyEdge").setAttribute("weight", (Double)0.0);
+        accessCounter++;
+        while(!priorityQueue.isEmpty()){
+            // Deque element with minimum key
+            NodeKeyPair nodeKeyPair = priorityQueue.remove();
+            Node currentNode = nodeKeyPair.getNode();
+            accessCounter++;
+            if (currentNode.getAttribute("isInSpanningTree") != null)
+                continue;
+            accessCounter++;
+            // Loop all edges, because we allow multi-edges
+            Iterator<Edge> connectedEdgesIterator = currentNode.getEdgeIterator();
+
+            // Mark node as added
+            currentNode.setAttribute("isInSpanningTree", true);
+            accessCounter++;
+
+            while (connectedEdgesIterator.hasNext()){
+                Edge edge = connectedEdgesIterator.next();
+                accessCounter++;
+
+                Node currentNeighbour = null;
+                if (edge.getNode1().getId() == currentNode.getId())
+                    currentNeighbour = edge.getNode0();
+                else
+                    currentNeighbour = edge.getNode1();
+                accessCounter++;
+                // Check, if neighbour is already in spanning tree
+                if (currentNeighbour.getAttribute("isInSpanningTree") == null) {
+                    Double weight = edge.getAttribute("weight");
+                    accessCounter++;
+                    Edge oldEdge = currentNeighbour.getAttribute("connectingEdge");
+
+                    // Add node to the queue, if there was no previous edge or the new weight is lower.
+                    // Node can now be in the priority queue with multiple edges, but only the one with the
+                    // lowest weight will be dequed first. All subsequent pairs will be discarded.
+                    if (oldEdge == null || (Double)oldEdge.getAttribute("weight") > weight) {
+                        priorityQueue.add(new NodeKeyPair(currentNeighbour, weight));
+
+                        currentNeighbour.setAttribute("connectingEdge", edge);
+                        accessCounter++;
+                    }
+                }
+            }
+            // Add node's connecting edge to the spanning tree
+            Edge newEdge = currentNode.getAttribute("connectingEdge");
+            accessCounter++;
+            spanningEdges.add(newEdge);
+
+            //  System.out.print(currentNode + " ");
+            // System.out.print(newEdge + Double.toString(newEdge.getAttribute("weight")) + "\n");
+
+            spanningWeight += (Double)newEdge.getAttribute("weight");
+            accessCounter++;
+        }
+
+        // Remove the dummy edge from the graph
+        spanningEdges.remove(graph.getEdge("dummyEdge"));
+        graph.removeEdge("dummyEdge");
+        accessCounter++;
+
+        // Add attribute to access mininum spanning weight
+        graph.setAttribute("minimumSpanningWeight", spanningWeight);
+        accessCounter++;
+
+        return accessCounter;
+    }
 
     public static ArrayList<Edge> minimumSpanningTreePrim(Graph graph, boolean outputRuntime) {
         long start = 0;
@@ -451,6 +534,7 @@ public class MinimumSpanningTrees {
 
         // Add attribute to access mininum spanning weight
         graph.setAttribute("minimumSpanningWeight", spanningWeight);
+
 
         if (outputRuntime)
             System.out.print("Prim Algorithm(with decrease key) runtime: " + ((java.lang.System.currentTimeMillis() - start) / 1000.0) + " secs" + "\n");
