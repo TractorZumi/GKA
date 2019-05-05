@@ -7,9 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GKA" />
-        <module name="gkaPraktikum1" />
         <module name="GKA2" />
         <module name="GKA3" />
+        <module name="gkaPraktikum1" />
       </profile>
     </annotationProcessing>
   </component>

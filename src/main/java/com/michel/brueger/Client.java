@@ -23,8 +23,9 @@ public class Client {
                     "3: Kruskal mit Zeitmessung \n" +
                     "4: Kruskal mit Graph-Zugriffen \n" +
                     "5: Prim auf eingelesenen Graph anwenden \n" +
-                    "6: Prim mit Zeitmessungen\n" +
-                    "7: Prim mit Graph-Zugriffen");
+                    "6: Prim mit Zeitmessungen \n" +
+                    "7: Prim mit Graph-Zugriffen \n" +
+                    "8: Prim1 mit Graph-Zugriffen");
 
             int eingabe = scanner1.nextInt();
 
@@ -95,9 +96,22 @@ public class Client {
                     try {
                         Graph graph1 = GraphUtilities.createGraphFromFile(parametersList.get(0));
                         System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimDecreaseKeyWithCounter(graph1));
+//                        System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimCounter(graph1));
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }                    break;
+                    }
+                    break;
+                case 8:
+                    parametersList = mstDialog();
+                    outputRuntimeBool = false;
+                    if (parametersList.get(1).equals("ja")) outputRuntimeBool = true;
+                    try {
+                        Graph graph1 = GraphUtilities.createGraphFromFile(parametersList.get(0));
+                        System.out.println(MinimumSpanningTrees.minimumSpanningTreePrimCounter(graph1));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
                     System.out.println("Ungültige Eingabe! Bitte geben Sie eine Zahl zwischen 1 und 8 ein.");
             }

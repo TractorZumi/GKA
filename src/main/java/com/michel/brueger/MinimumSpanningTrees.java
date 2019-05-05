@@ -35,9 +35,13 @@ public class MinimumSpanningTrees {
         if (numberOfEdges < 0 || numberOfNodes <= 0)
             return generatedGraph;
 
-        // Specified graph can't be generated without multi edges, return empty graph instead
-        if (numberOfEdges > numberOfNodes && allowMultiEdges != true)
+        // If specified graph can't be generated without multi edges, return empty graph instead
+        int possibleNumberOfEdgesInSinglegraph = ((numberOfNodes*numberOfNodes-numberOfNodes)/2)+numberOfNodes;
+//        if (numberOfEdges > numberOfNodes && allowMultiEdges != true) {
+        if (numberOfEdges > possibleNumberOfEdgesInSinglegraph && allowMultiEdges != true) {
+
             return generatedGraph;
+        }
 
         generatedGraph.setAutoCreate(true);
         generatedGraph.setStrict(false);
@@ -111,6 +115,12 @@ public class MinimumSpanningTrees {
         return  (endTime-startTime)/10;
     }
 
+    /**
+     * Computes MST of graph using algorithm of Krukal
+     * @param graph
+     * @param outputRuntime  prints some information on the coneole during runtime
+     * @return ArrayList of Edges belonging to MST. Enables coloring these edges in grafical output of graph
+     */
     public static ArrayList<Edge> minimumSpanningTreeKruskal(Graph graph, boolean outputRuntime) {
         long start = 0;
         //long accessCounter = 0;
@@ -124,6 +134,7 @@ public class MinimumSpanningTrees {
         // Create the result list of spanningEdges
         ArrayList<Edge> spanningEdges = new ArrayList<>();
 
+        // Filling edgeArray with weighted edges
         int i = 0;
         for(Edge edge : edgeSet) {
             if (!edge.hasAttribute("weight")) {
@@ -136,12 +147,12 @@ public class MinimumSpanningTrees {
         // Create new DisjointSet
         DisjointSet disjointSet = new DisjointSet();
 
-        // Create a single Set for each Node
+        // Filling DisjointSet by creating a single SetElement for each Node, Node knows Id of his DisjointSetElement by attribute "position"
         for (Node node : graph.getEachNode()) {
             node.setAttribute("position", disjointSet.makeSet());
         }
 
-        // Sort the Edges by weight
+        // Sort the Edges in edgeArray by weight
         Arrays.sort(edgeArray, Comparator.comparingDouble((Edge edge) -> (Double)edge.getAttribute("weight")));
 
         Double totalWeight = 0.0;
@@ -151,10 +162,11 @@ public class MinimumSpanningTrees {
             int position1 = edgeArray[i].getNode0().getAttribute("position");
             int position2 = edgeArray[i].getNode1().getAttribute("position");
 
-            if (disjointSet.union(position1, position2)) {
+            if (disjointSet.union(position1, position2)) {      // true wenn beide Knoten bisher nicht verbunden (unterschiedliche Wurzeln)
                 // edge has merged to sets, add it to the spanning tree
                 spanningEdges.add(edgeArray[i]);
                 totalWeight += (Double)edgeArray[i].getAttribute("weight");
+                //  prüfen ob alle knoten schon enthalten sind in MST
             }
         }
 
@@ -557,6 +569,15 @@ public class MinimumSpanningTrees {
         System.out.print("runtime graphstream kruskal: " + (java.lang.System.currentTimeMillis() - start) / 1000.0 + "\n");
         System.out.print("graphstream kruskal weight: " + kruskal.getTreeWeight() + "\n");
         return kruskal.getTreeWeight();
+    }
+
+    public static long primGraphstreamTime(Graph graph){
+        long startTime = System.currentTimeMillis();
+        for(int i=0; i<10; i++){
+            primGraphstream(graph);
+        }
+        long endTime = System.currentTimeMillis();
+        return endTime-startTime;
     }
 
     public static Double primGraphstream(Graph graph){

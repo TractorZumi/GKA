@@ -21,6 +21,7 @@ public class DisjointSet {
 
         int parent = element.getParent();
 
+    // path compression
         if(parent != position) {
             element.setParent(find(parent));
             return element.getParent();
@@ -30,16 +31,17 @@ public class DisjointSet {
     }
 
     // Union by size
-    public boolean union(int position1, int position2) {
+    public boolean union(int position1, int position2) {   // position = id
         int root1 = find(position1);
         int root2 = find(position2);
 
-        if (root1 == root2)
+        if (root1 == root2)  // dann sind die Knoten schon irgendwie verbunden
             return false;
 
         DisjointSetElement rootElement1 = disjointSet.get(root1);
         DisjointSetElement rootElement2 = disjointSet.get(root2);
 
+        // kleinerer Baum wird an Wurzel des größeren Baumes gehängt (verhindert Entartung)
         if (rootElement1.getSize() > rootElement2.getSize()) {
             rootElement2.setParent(root1);
             rootElement1.setSize(rootElement1.getSize() + rootElement2.getSize());
