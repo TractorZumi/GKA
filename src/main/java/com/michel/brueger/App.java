@@ -87,8 +87,9 @@ public class App
 //            testPrimDecreaseKey();
 //            testPrim();
 
-            Client client = new Client();
-            client.run();
+//            Client client = new Client();
+//            client.run();
+        Eulergenerator.generateEulergraph(8);
 
 
     }
