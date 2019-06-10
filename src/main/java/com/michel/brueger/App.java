@@ -5,6 +5,7 @@ import org.graphstream.graph.Graph;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.graphstream.algorithm.Kruskal;
 import org.graphstream.graph.Node;
@@ -80,6 +81,31 @@ public class App
         catch(IOException e){}
     }
 
+    public static void testEulerCycleAlgorithms() {
+        boolean test_hierholzer = false;
+        Graph graph = null;
+        try {
+            graph = GraphUtilities.createGraphFromFile("src/main/files/eulercycleexample.graph");
+        } catch (IOException e) {
+        }
+
+        ArrayList<Edge> cycle = null;
+
+        if (test_hierholzer) {
+            for (int i = 0; i < 100; i++)
+                cycle = EulerCycleAlgorithms.generateEulerCycleHierholzer(graph);
+        } else
+            // other algorithm
+            for (int i = 0; i < 100; i++)
+                cycle = EulerCycleAlgorithms.generateEulerCycleFleury(graph);
+
+        System.out.print(cycle);
+        EulerCycleAlgorithms.labelIndex(cycle);
+        GraphUtilities.colorInEdges(cycle, graph, "red");
+
+        graph.display();
+    }
+
 
     public static void main( String[] args ) throws IOException {
             //testGraphGenerator();
@@ -89,7 +115,17 @@ public class App
 
 //            Client client = new Client();
 //            client.run();
-        Eulergenerator.generateEulergraph(8);
+
+//        testEulerCycleAlgorithms();
+
+        Graph euler = Eulergenerator.generateEulergraph(1000);
+        System.out.println("#####");
+        System.out.println("EulergraphEdges = " + euler.getEdgeSet().size());
+        System.out.println("EulergraphNodes = " + euler.getNodeSet().size());
+//        System.out.println("#####");
+//        for(Edge edge : euler.getEdgeSet()){
+//            System.out.println(edge);
+//        }
 
 
     }
