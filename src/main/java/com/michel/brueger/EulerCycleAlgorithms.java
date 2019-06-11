@@ -319,11 +319,13 @@ public class EulerCycleAlgorithms {
             // debug("current node: " + currentNode.toString());
             //debug("next edge: " + currentEdge.toString());
 
+            // Kante kommt mehrfach vor
             if (visitedEdges.contains(currentEdge.getId()))
                 return false;
 
             visitedEdges.add(currentEdge.getId());
 
+            // Kanten hängen nicht zusammen (ergeben keinen Pfad)
             if (currentEdge.getNode0().getId() == currentNode.getId()){
                 currentNode = currentEdge.getNode1();
             }
