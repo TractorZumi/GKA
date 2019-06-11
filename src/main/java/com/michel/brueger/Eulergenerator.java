@@ -134,17 +134,27 @@ public class Eulergenerator {
             } else {
                 randomIndex1 = random.nextInt(oddDegreeNodesList.size());
                 source = resultGraph.getNode(oddDegreeNodesList.get(randomIndex1).getIndex());
+                oddDegreeNodesList.remove(randomIndex1);                        // ******************
+                oddDegreeNodesListClone.remove(randomIndex1);
                 System.out.println("source 136 = " + source);
                 randomIndex2 = random.nextInt(oddDegreeNodesList.size());
-                while(randomIndex2 == randomIndex1){
-                    randomIndex2 = random.nextInt(oddDegreeNodesList.size());
-                }
+                System.out.println("r2 vor while = " + randomIndex2);
+//                while(randomIndex2 == randomIndex1){
+//                    randomIndex2 = random.nextInt(oddDegreeNodesList.size());
+//                }
 //                while (oddDegreeNodesList.size() > 2) {
 //                if (oddDegreeNodesList.size() > 2) {
                     // reduce cloneList until node found without existing edge to source
+                    int temp = 0;
+                    int count = 0;
+                    ArrayList<Integer> deletedIndizes = new ArrayList<>();
                     while (checkIfEdgeAlreadyExists(resultGraph, source, resultGraph.getNode(oddDegreeNodesListClone.get(randomIndex2).getIndex()))) {
                         oddDegreeNodesListClone.remove(randomIndex2);
+                        deletedIndizes.add(randomIndex2);
+                        System.out.println(deletedIndizes);
+                        temp = randomIndex2;
                         randomIndex2 = random.nextInt(oddDegreeNodesListClone.size());
+                        System.out.println("randomIndex2 in while 2 = " + randomIndex2);
                     }
 //                }
                 target = resultGraph.getNode(oddDegreeNodesListClone.get(randomIndex2).getIndex());
@@ -153,8 +163,16 @@ public class Eulergenerator {
                 resultGraph.addEdge("Edge" + edgeCounter, source, target);
                 edgeCounter++;
                 System.out.println("154 edge added");
-                oddDegreeNodesList.remove(Math.max(randomIndex1, randomIndex2));
-                oddDegreeNodesList.remove(Math.min(randomIndex1, randomIndex2));
+//                oddDegreeNodesList.remove(randomIndex2);
+                System.out.println("temp nach while = " + temp);
+                for(Integer elem : deletedIndizes){
+                    if (elem<=randomIndex2){
+                        count++;
+                    }
+                }
+                oddDegreeNodesList.remove(randomIndex2+count);
+//                oddDegreeNodesList.remove(Math.max(randomIndex1, randomIndex2));
+//                oddDegreeNodesList.remove(Math.min(randomIndex1, randomIndex2));
             }
         }
 

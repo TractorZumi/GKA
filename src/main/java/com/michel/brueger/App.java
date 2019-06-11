@@ -118,14 +118,18 @@ public class App
 
 //        testEulerCycleAlgorithms();
 
-        Graph euler = Eulergenerator.generateEulergraph(1000);
+        Graph euler = Eulergenerator.generateEulergraph(10);
         System.out.println("#####");
         System.out.println("EulergraphEdges = " + euler.getEdgeSet().size());
         System.out.println("EulergraphNodes = " + euler.getNodeSet().size());
-//        System.out.println("#####");
-//        for(Edge edge : euler.getEdgeSet()){
-//            System.out.println(edge);
-//        }
+        System.out.println("#####");
+        for(Edge edge : euler.getEdgeSet()){
+            System.out.println(edge);
+        }
+
+//        Graph genEuler41 = Eulergenerator.generateEulergraph(4);
+//        GraphUtilities.createFileFromGraph("src/main/files/genEuler41.graph", genEuler41);
+
 
 
     }
